@@ -2,8 +2,14 @@
 export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
-    extend: {},
+    extend: {
+      aspectRatio: {
+        '4/3': '4 / 3',
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+      require('tailwindcss-dotted-background'),
+  ],
 }
 

@@ -1,3 +1,36 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    --color-primary: black;
+}
+
+.shadow-solid-primary {
+    box-shadow: 3px 5px var(--color-primary);
+}
+
+.shadow-solid-secondary {
+    box-shadow: 2px 3px var(--color-primary);
+}
+
+.shadow-solid-none {
+    box-shadow: 0 0 var(--color-primary);
+}
+
+.bg-custom1 {
+    background: #fef1e6;
+}
+
+.bg-custom2 {
+    background: #fedc01;
+}
+
+.bg-custom3 {
+    background: #49cfe3;
+}
+
+.text-custom-1 {
+    --tw-text-opacity: 1;
+    color: rgb(254 175 0 / var(--tw-text-opacity));
+}

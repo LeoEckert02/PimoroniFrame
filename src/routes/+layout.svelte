@@ -1,12 +1,12 @@
 <script>
     import "../app.css";
-    import { Toaster } from 'svelte-french-toast';
+    import {Toaster} from 'svelte-french-toast';
 </script>
 
-<Toaster />
-<body class="min-h-screen bg-slate-50">
-    <div class="flex items-center justify-center h-screen">
-        <slot />
+<Toaster/>
+<body class="min-h-screen bg-custom1 bg-dotted-spacing-3 bg-dotted-gray-300">
+    <div class="bg-dotted-spacing-3 bg-dotted-amber-300">
+    <slot/>
     </div>
 </body>
 

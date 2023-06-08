@@ -11,7 +11,7 @@
 
     onMount(() => {
         if (client.authStore.isValid) {
-           goto('/');
+            goto('/');
         }
     })
 
@@ -44,29 +44,31 @@
 </script>
 
 {#if !client.authStore.isValid }
-<div class="w-full max-w-xs">
-    <form on:submit|preventDefault={login} class="bg-white shadow-lg rounded-md px-8 pt-6 pb-8 mb-4">
-        <div class="text-2xl font-bold pb-3 text-gray-600 text-left">Login</div>
-        <div class="mb-4">
-            <label class="block text-gray-500 text-sm font-bold mb-2" for="username">
-                Benutzername
-            </label>
-            <input bind:value={username} class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" id="username" type="text" placeholder="Benutzername">
+    <div class="flex items-center justify-center h-screen">
+        <div class="w-full max-w-sm m-4">
+            <form on:submit|preventDefault={login}
+                  class="bg-white border-2 border-black shadow-solid-primary rounded-lg px-8 pt-6 pb-8 mb-4 -mx3">
+                <div class="text-3xl font-medium pb-3 text-black text-left">Login</div>
+                <div class="mb-4">
+                    <label class="block text-black text-md font-medium mb-2" for="username">
+                        Benutzername
+                    </label>
+                    <input bind:value={username}
+                           class="mb-1 border-2 border-black rounded-lg w-full py-3 px-4 shadow-solid-primary leading-tight"
+                           id="username" type="text" required placeholder="Benutzername">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-black text-md font-medium mb-2" for="password">
+                        Passwort
+                    </label>
+                    <input bind:value={password}
+                           class="mb-1 appearance-none border-2 border-black rounded-lg w-full py-3 px-4 shadow-solid-primary leading-tight"
+                           id="password" type="password" required placeholder="Passwort">
+                </div>
+                <button class="hover:bg-black hover:text-white font-medium bg-custom2 text-black items-center inline-flex bg-red-100 border-2 border-black duration-300 ease-in-out focus:outline-none hover:shadow-none justify-center rounded-lg shadow-solid-primary text-center transform transition w-full py-3 text-lg">
+                    Login
+                </button>
+            </form>
         </div>
-        <div class="mb-6">
-            <label class="block text-gray-500 text-sm font-bold mb-2" for="password">
-                Passwort
-            </label>
-            <input bind:value={password} class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" id="password" type="password" placeholder="Passwort">
-        </div>
-        <div class="flex items-center justify-between">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-                Login
-            </button>
-            <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
-                Passwort vergessen?
-            </a>
-        </div>
-    </form>
-</div>
+    </div>
 {/if}
