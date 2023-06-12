@@ -16,6 +16,7 @@
     let input;
     let image;
     let imageFile;
+    let imageFileResized;
     let showImage = false;
 
     function onChange() {
@@ -24,47 +25,69 @@
         console.log((file.name.split('.').pop()));
 
         if (file) {
-            if (file.name.split('.').pop().toLowerCase() === 'heic') {
-                // Create a new FormData object
-                const formData = new FormData();
 
-                // Append the selected file to the FormData object
-                formData.append('image', file);
+            // Create a new FormData object
+            let formData = new FormData();
 
-                // Send the HTTP request with the FormData
-                fetch('http://127.0.0.1:8090/api/convert', {
-                    method: 'PUT',
-                    body: formData
-                }).then(response => {
-                    // Check the response status
-                    if (response.ok) {
-                        // Read the response data as a blob
-                        return response.blob();
-                    } else {
-                        throw new Error('Request failed with status ' + response.status);
-                    }
+            // Append the selected file to the FormData object
+            formData.append('image', file);
+
+            // Send the HTTP request with the FormData
+            fetch('http://127.0.0.1:8090/api/compress', {
+                method: 'PUT',
+                body: formData
+            }).then(response => {
+                // Check the response status
+                if (response.ok) {
+                    // Read the response data as a blob
+                    return response.blob();
+                } else {
+                    throw new Error('Request failed with status ' + response.status);
+                }
+            })
+                .then(blob => {
+                    // Create a URL object from the blob
+                    const imageUrl = URL.createObjectURL(blob);
+
+                    // Use the imageUrl as the source for an <img> element or perform other operations
+                    image.setAttribute("src", imageUrl)
+                    imageFile = new File([blob], file.name.split('.')[0] + '.jpg'); // Create a File object from the blob
+                    console.log(imageFile.size);
                 })
-                    .then(blob => {
-                        // Create a URL object from the blob
-                        const imageUrl = URL.createObjectURL(blob);
-
-                        // Use the imageUrl as the source for an <img> element or perform other operations
-                        image.setAttribute("src", imageUrl)
-                        imageFile = new File([blob], file.name.split('.')[0] + '.jpg'); // Create a File object from the blob
-                        console.log(imageFile.size);
-                    })
-                    .catch(error => {
-                        // Handle any errors that occurred during the request
-                        console.error('Error:', error);
-                    });
-            } else {
-                const reader = new FileReader();
-                reader.addEventListener("load", function () {
-                    image.setAttribute("src", reader.result);
+                .catch(error => {
+                    // Handle any errors that occurred during the request
+                    console.error('Error:', error);
                 });
-                reader.readAsDataURL(file);
-                imageFile = file;
-            }
+
+
+            formData = new FormData();
+
+            // Append the selected file to the FormData object
+            formData.append('image', file);
+
+            // Send the HTTP request with the FormData
+            fetch('http://127.0.0.1:8090/api/resize', {
+                method: 'PUT',
+                body: formData
+            }).then(response => {
+                // Check the response status
+                if (response.ok) {
+                    // Read the response data as a blob
+                    return response.blob();
+                } else {
+                    throw new Error('Request failed with status ' + response.status);
+                }
+            })
+                .then(blob => {
+
+                    // Use the imageUrl as the source for an <img> element or perform other operations
+                    imageFileResized = new File([blob], file.name.split('.')[0] + '.jpg'); // Create a File object from the blob
+                    console.log(imageFile.size);
+                })
+                .catch(error => {
+                    // Handle any errors that occurred during the request
+                    console.error('Error:', error);
+                });
 
             showImage = true;
 
@@ -84,6 +107,7 @@
                 position: 'bottom-center'
             },
         );
+        otherImg();
     }
 
     function upload() {
@@ -92,7 +116,12 @@
             formData.append("author", client.authStore.model.id);
             formData.append("image", imageFile);
 
-            return client.collection('images').create(formData);
+            client.collection('images').create(formData);
+
+            formData = new FormData();
+            formData.append("collected", false);
+            formData.append("image", imageFileResized);
+            return client.collection('resizedImages').create(formData);
         }
 
         toast.error('Wähle ein Bild aus!', {
@@ -110,12 +139,14 @@
 </script>
 
 {#if client.authStore.isValid}
-    <div class="flex items-center justify-center h-screen">
+    <div class="flex items-center justify-center md:min-h-screen">
         <div class="w-full max-w-md border-2 border-black shadow-solid-primary bg-white rounded-lg p-2 m-4">
             <div class="px-6 pt-4 lg:pb-3 pb-1">
-                <div class="font-medium text-2xl mb-2 text-custom-1">Teile deine Erinnerungen mit Großmutter!</div>
-                <h3 class="text-lg pb-1 font-medium">Wie funktionierts?</h3>
-                <p class="text-gray-700 text-base">
+                <div class="font-medium text-xl md:text-2xl mb-2 text-custom-1">Teile deine Erinnerungen mit
+                    Großmutter!
+                </div>
+                <h3 class="text-md md:text-lg pb-1 font-medium">Wie funktionierts?</h3>
+                <p class="text-gray-700 text-sm md:text-md">
                     Drücke einfach auf die Bild-Auswahl-Fläche und lade dein gewünschtes Bild hoch.
                     Sobald es hochgeladen ist, wird es mit etwas Verzögerung auf dem digitalen Bilderrahmen bei
                     Großmutter zu Hause angezeigt.
@@ -136,20 +167,24 @@
                         </div>
                         <p class="text-center mb-2 text-sm"><span class="font-semibold">Klicke zum Hochladen</span> oder
                             ziehe das Bild hierher</p>
+                        <p class="text-center mb-2 text-sm">Bilder im <span class="font-semibold">4:3- </span>und <span
+                                class="font-semibold">Querformat</span></p>
                     {/if}
                 </div>
                 <input bind:this={input} on:change={onChange} id="dropzone-file" type="file" class="hidden"/>
             </label>
             {#if showImage}
                 <div class="m-6 mt-2 grid grid-cols-2">
-                    <button on:click={otherImg} class="hover:bg-black hover:text-white mr-2 font-medium text-black items-center inline-flex border-2 border-black duration-300 ease-in-out focus:outline-none hover:shadow-none justify-center rounded-lg shadow-solid-primary text-center transform transition py-2 md:py-3">
+                    <button on:click={otherImg}
+                            class="hover:bg-black hover:text-white mr-2 font-medium text-black items-center inline-flex border-2 border-black duration-300 ease-in-out focus:outline-none hover:shadow-none justify-center rounded-lg shadow-solid-primary text-center transform transition py-2 md:py-3">
                         <div class="flex items-center justify-center">
                             <span class="inline-flex items-center justify-center font-medium">
                                   Anderes Bild
                             </span>
                         </div>
                     </button>
-                    <button on:click={onUpload} class="hover:bg-black hover:text-white font-medium bg-custom2 text-black items-center inline-flex border-2 border-black duration-300 ease-in-out focus:outline-none hover:shadow-none justify-center rounded-lg shadow-solid-primary text-center transform transition py-3">
+                    <button on:click={onUpload}
+                            class="hover:bg-black hover:text-white font-medium bg-custom2 text-black items-center inline-flex border-2 border-black duration-300 ease-in-out focus:outline-none hover:shadow-none justify-center rounded-lg shadow-solid-primary text-center transform transition py-3">
                         <div class="flex items-center justify-center">
                             <span class="inline-flex items-center font- mr-1">
                               Hochladen

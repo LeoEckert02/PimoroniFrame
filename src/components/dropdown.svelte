@@ -6,8 +6,8 @@
     }
 </script>
 
-<div class="fixed z-90 top-3 right-3 md:right-1/4">
-    <div class="relative inline-block text-left">
+<div class="md:fixed md:z-90 md:top-3 md:right-1/4 text-right p-3 mb-2">
+    <div class="md:relative inline-block text-left">
         <div>
             <button on:click={onClick} class="hover:bg-black hover:text-white bg-custom2 w-10 h-10 rounded-full shadow-solid-secondary border-2 border-black flex justify-center items-center duration-300 ease-in-out focus:outline-none hover:shadow-none">
                 <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" height="1.2em" viewBox="0 0 448 512">
@@ -18,7 +18,7 @@
         </div>
 
         {#if !hidden}
-            <div on:click={onClick} class="font-medium absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y-2 divide-black rounded-lg bg-white shadow-solid-primary border-black border-2"
+            <div on:click={onClick} class="m-3 md:m-0 font-medium absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y-2 divide-black rounded-lg bg-white shadow-solid-primary border-black border-2"
                  role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                 <div class="hover:bg-gray-100 py-1 rounded-t-lg" role="none">
                     <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
@@ -28,7 +28,7 @@
                     </a>
                 </div>
                 <div class="hover:bg-gray-100 py-1" role="none">
-                    <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1"
+                    <a href="/datenschutz" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1"
                        id="menu-item-2">Datenschutzerklärung</a>
                 </div>
                 <div class="hover:bg-gray-100 py-1 rounded-b-lg" role="none">
