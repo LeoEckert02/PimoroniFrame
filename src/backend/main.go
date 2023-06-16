@@ -239,7 +239,7 @@ func main() {
 			Path:   "/api/images/collect/:slug",
 			Handler: func(c echo.Context) error {
 
-				if slug != generateMD5Hash() {
+				if "slug" != generateMD5Hash() {
 					return c.JSON(http.StatusMethodNotAllowed, "Authorization failed")
 				}
 
