@@ -2,10 +2,13 @@ package main
 
 import (
 	"bytes"
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/adrium/goheif"
 	"github.com/disintegration/imaging"
@@ -15,6 +18,8 @@ import (
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
 )
+
+var password = "your_password_here"
 
 // Skip Writer for exif writing
 type writerSkipper struct {
@@ -231,8 +236,12 @@ func main() {
 		// or you can also use the shorter e.Router.GET("/articles/:slug", handler, middlewares...)
 		e.Router.AddRoute(echo.Route{
 			Method: http.MethodGet,
-			Path:   "/api/images/collect",
+			Path:   "/api/images/collect/:slug",
 			Handler: func(c echo.Context) error {
+
+				if slug != generateMD5Hash() {
+					return c.JSON(http.StatusMethodNotAllowed, "Authorization failed")
+				}
 
 				collection, err := app.Dao().FindCollectionByNameOrId("resizedImages")
 				if err != nil {
@@ -251,7 +260,18 @@ func main() {
 				id := rows[0]["id"].String
 				image := rows[0]["image"].String
 
+				record, err := app.Dao().FindRecordById("resizedImages", id)
+
 				result := "/api/files/resizedImages/" + id + "/" + image
+				if err != nil {
+					return err
+				}
+
+				record.Set("collected", true)
+
+				if err := app.Dao().SaveRecord(record); err != nil {
+					return err
+				}
 
 				return c.JSON(http.StatusOK, result)
 			},
@@ -289,4 +309,14 @@ func newWriterExif(w io.Writer, exif []byte) (io.Writer, error) {
 	}
 
 	return writer, nil
+}
+
+func generateMD5Hash() string {
+	today := time.Now().Format("2006-01-02")
+	data := today + password
+
+	hash := md5.Sum([]byte(data))
+	hashString := hex.EncodeToString(hash[:])
+
+	return hashString
 }

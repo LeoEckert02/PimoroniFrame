@@ -4,6 +4,8 @@
     import {onMount} from "svelte";
     import {fade} from 'svelte/transition';
     import toast from "svelte-french-toast";
+    import {fetchImages} from "../stores/stores.js";
+    import {page} from "$app/stores";
 
     const client = new PocketBase('http://127.0.0.1:8090');
 
@@ -108,6 +110,7 @@
             },
         );
         otherImg();
+        fetchImages($page);
     }
 
     function upload() {

@@ -14,5 +14,5 @@
 <Dropdown/>
 <Upload/>
 {#each $imageData as image}
-    <Image recordId={image.id} fileName={image.image} location={image.location} date={image.date}></Image>
+    <Image recordId={image.id} fileName={image.image} date_time={image.date_time} author={image.author}></Image>
 {/each}

@@ -21,6 +21,7 @@ export const fetchImages = async (page) => {
             image: data.image,
             created: data.created,
             author: data.author,
+            date_time: data.created,
         }
     })
 
