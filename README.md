@@ -1,38 +1,28 @@
-# create-svelte
+# About this project
+This is a small project involving a web app where you can upload an image daily. 
+This image will then be pulled from a digital frame and displayed in someone's home ([this](https://shop.pimoroni.com/products/inky-frame-5-7?variant=40048398958675) digital frame to be exact).
+Development of this project is currently paused.
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+# Frontend
+I use Seveltekit as a frontend framework and TailwindCSS to do all the styling.
 
-## Creating a project
+# Backend 
+I use Pocketbase as a go framework to handle the conversion and processing of uploaded files.
 
-If you're seeing this, you've probably already done this step. Congrats!
+*Disclaimer*: This is my first project ever with go, and I am still quite new with it.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+# Features 
+## Login
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+![alt text](ReadmeImages/LoginPage.png)
 
-## Developing
+## File upload 
+Users can upload any type of image file (including .heic)
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+![alt text](ReadmeImages/FileUpload.png)
 
-```bash
-npm run dev
+## View uploaded images
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+Users can view images that have been uploaded by themselves or other users with additional information
 
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+![alt text](ReadmeImages/ViewImages.jpeg)
